@@ -9,7 +9,7 @@ import BilsPage from "./pages/BilsPage";
 import CustomerPage from "./pages/CustomerPage";
 import UsersPage from "./pages/UsersPage";
 import Userbilpage from "./pages/Userbilpage";
-
+import './App.css'
 function App() {
   return (
     <>
