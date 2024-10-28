@@ -7,6 +7,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import BilsPage from "./pages/BilsPage";
 import CustomerPage from "./pages/CustomerPage";
+import UsersPage from "./pages/UsersPage";
+import Userbilpage from "./pages/Userbilpage";
 
 function App() {
   return (
@@ -50,10 +52,27 @@ function App() {
           ></Route>
 
           <Route
+            path="/users"
+            element={
+              <ProtectedRoute>
+                <UsersPage></UsersPage>
+              </ProtectedRoute>
+            }
+          ></Route>
+
+          <Route
             path="/CustomerPage"
             element={
               <ProtectedRoute>
                 <CustomerPage></CustomerPage>
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/userbilPage"
+            element={
+              <ProtectedRoute>
+                <Userbilpage></Userbilpage>
               </ProtectedRoute>
             }
           ></Route>

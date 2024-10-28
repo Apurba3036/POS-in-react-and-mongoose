@@ -3,8 +3,6 @@ import { useSelector } from "react-redux";
 import { Layout, Menu } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import img from "../logo/burtique.jpg";
-// import Flash from "react-reveal/Flash";
-
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -14,6 +12,7 @@ import {
   CopyOutlined,
   ShoppingCartOutlined,
   UnorderedListOutlined,
+  UsergroupAddOutlined,
 } from "@ant-design/icons";
 import "../styles/DefaultLayout.css";
 import Spinner from "./Spinner";
@@ -23,44 +22,63 @@ const { Header, Sider, Content } = Layout;
 const DefaultLayout = ({ children }) => {
   const navigate = useNavigate();
   const { cartItems, loading } = useSelector((state) => state.rootReducer);
-  const [collapsed, setCollapased] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const [role, setRole] = useState("");
+
+  useEffect(() => {
+    // Retrieve and parse the auth object from localStorage
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    if (auth && auth.role) {
+      setRole(auth.role);
+    }
+  }, []);
 
   const toggle = () => {
-    setCollapased(!collapsed);
+    setCollapsed(!collapsed);
   };
-  // to get localstorage data
+
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
+
   return (
     <Layout>
-      {loading && <Spinner></Spinner>}
+      {loading && <Spinner />}
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="logoimg">
-          {/* <Flash>
-            <img src={img} alt="/" />
-          </Flash> */}
-          <h4 className="text-center text-light font-wight-bold mt-4 ">
+          <h4 className="text-center text-light font-weight-bold mt-4">
             Burtique Fashion
           </h4>
         </div>
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={window.location.pathname}
-        >
+        <Menu theme="dark" mode="inline" defaultSelectedKeys={[window.location.pathname]}>
           <Menu.Item key="/" icon={<HomeOutlined />}>
             <Link to="/">Home</Link>
           </Menu.Item>
-          <Menu.Item key="/bills" icon={<CopyOutlined />}>
-            <Link to="/bills">Bills</Link>
-          </Menu.Item>
-          <Menu.Item key="/items" icon={<UnorderedListOutlined />}>
-            <Link to="/items">Items</Link>
-          </Menu.Item>
-          <Menu.Item key="/cart" icon={<ShoppingCartOutlined />}>
-            <Link to="/cart">Cart</Link>
-          </Menu.Item>
+
+          {/* Conditionally render items based on the role */}
+          {role === "admin" ? (
+            <>
+              <Menu.Item key="/bills" icon={<CopyOutlined />}>
+                <Link to="/bills">Bills</Link>
+              </Menu.Item>
+              <Menu.Item key="/items" icon={<UnorderedListOutlined />}>
+                <Link to="/items">Items</Link>
+              </Menu.Item>
+              <Menu.Item key="/users" icon={<UsergroupAddOutlined />}>
+                <Link to="/users">Users</Link>
+              </Menu.Item>
+            </>
+          ) : (
+            <>
+            <Menu.Item key="/cart" icon={<ShoppingCartOutlined />}>
+              <Link to="/cart">Cart</Link>
+            </Menu.Item>
+            <Menu.Item key="/userbilPage" icon={<CopyOutlined />}>
+              <Link to="/userbilPage">Bill</Link>
+            </Menu.Item>
+            </>
+          )}
+
           <Menu.Item key="/customers" icon={<UserOutlined />}>
             <Link to="/CustomerPage">About Us</Link>
           </Menu.Item>
@@ -78,20 +96,17 @@ const DefaultLayout = ({ children }) => {
       </Sider>
       <Layout className="site-layout">
         <Header className="site-layout-background" style={{ padding: 0 }}>
-          {React.createElement(
-            collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-            {
-              className: "trigger",
-              onClick: toggle,
-            }
-          )}
-          <div
+          {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+            className: "trigger",
+            onClick: toggle,
+          })}
+          {/* <div
             className="cart-item d-flex justify-content-space-between flex-row"
             onClick={() => navigate("/cart")}
           >
             <h5 className="mt-2 text-primary lengthh ">{cartItems.length}</h5>
             <ShoppingCartOutlined className="iconn" />
-          </div>
+          </div> */}
         </Header>
         <Content
           className="site-layout-background"
@@ -107,4 +122,5 @@ const DefaultLayout = ({ children }) => {
     </Layout>
   );
 };
+
 export default DefaultLayout;

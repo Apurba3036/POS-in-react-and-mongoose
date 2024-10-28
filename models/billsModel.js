@@ -23,6 +23,10 @@ const billSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    paymentstatus: {
+      type: String,
+      default:"Paid"
+    },
 
     cartItems: {
       type: Array,

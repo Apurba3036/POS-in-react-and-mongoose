@@ -17,11 +17,13 @@ const userSchema = mongoose.Schema(
     verified: {
       type: Boolean,
     },
+    role: {      
+      type: String,
+      default: "user", 
+    },
   },
-
-  { timestamp: true }
+  { timestamps: true }
 );
 
 const Users = mongoose.model("users", userSchema);
-
 module.exports = Users;
